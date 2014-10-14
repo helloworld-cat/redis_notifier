@@ -35,7 +35,7 @@ redis_notifier.observe_key('keys:my_key') do |event|
 end
 
 redis_notifier.listen
-``
+```
 
 ## Contributing
 
