@@ -44,12 +44,13 @@ module RedisNotifier
     end
 
     def build_channel_for(type, prefix)
-      case type
+      namespace = case type
       when :event
-        "__keyevent@#{db}__:#{prefix}"
+        'keyevent'
       when :key
-        "__keyspace@#{db}__:#{prefix}"
+        'keyspace'
       end
+      "__#{namespace}@#{db}__:#{prefix}"
     end
 
     def find_type_from(channel)
