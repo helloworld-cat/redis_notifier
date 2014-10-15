@@ -23,16 +23,16 @@ module RedisNotifier
       @db = db.to_s
       @redis = redis
       redis.config(:set, NOTIFY_KEYSPACE_EVENTS, keyspace_config)
-      @callbacks = { keys: {}, events: {} }
+      @callbacks = { key: {}, event: {} }
       @listened_channels = []
     end
 
     def on_event(event_name, &block)
-      on :events, event_name, &block
+      on :event, event_name, &block
     end
 
     def observe_key(key, &block)
-      on :keys, key, &block
+      on :key, key, &block
     end
 
     def on(type, prefix, &block)
@@ -45,18 +45,18 @@ module RedisNotifier
 
     def build_channel_for(type, prefix)
       case type
-      when :events
+      when :event
         "__keyevent@#{db}__:#{prefix}"
-      when :keys
+      when :key
         "__keyspace@#{db}__:#{prefix}"
       end
     end
 
     def find_type_from(channel)
       if channel.include?('__keyevent@')
-        :events
+        :event
       elsif channel.include?('__keyspace@')
-        :keys
+        :key
       else
         nil
       end
